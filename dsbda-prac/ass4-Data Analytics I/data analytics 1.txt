@@ -1,0 +1,188 @@
+# Step 1: Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 2: Load the dataset from the local CSV file
+data = pd.read_csv('BostonHousing.csv')  # Ensure the file is in the same directory or provide the full path
+
+# Step 3: Explore the dataset
+print(data.head())  # Show the first 5 rows
+print(data.describe())  # Get a statistical summary of the data
+print(data.info())  # Check for missing values and data types
+
+# Step 4: Preprocessing (if necessary)
+# In this case, the dataset doesn't have any missing values, so no imputation is needed.
+# Check correlation between features to understand relationships with the target variable (medv)
+plt.figure(figsize=(12, 8))
+sns.heatmap(data.corr(), annot=True, cmap='coolwarm')
+plt.title("Correlation Matrix")
+plt.show()
+
+# Step 5: Split the dataset into features and target variable
+X = data.drop(columns=['medv'])  # Drop the target column 'medv'
+y = data['medv']  # The target variable is 'medv'
+
+# Print Step 5 details
+print("Step 5: Features and Target Split")
+print("Features (X):", X.columns.tolist())  # Display the features
+print("Target (y): 'medv'")
+
+# Step 6: Split the data into training and testing sets (80% train, 20% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Print Step 6 details
+print("\nStep 6: Split the Data into Training and Testing Sets")
+print(f"Training data size: {X_train.shape}")
+print(f"Testing data size: {X_test.shape}")
+
+# Step 7: Create a Linear Regression model
+model = LinearRegression()
+
+# Print Step 7 details
+print("\nStep 7: Create a Linear Regression Model")
+print("Linear Regression model created.")
+
+# Step 8: Train the model
+model.fit(X_train, y_train)
+
+# Print Step 8 details
+print("\nStep 8: Train the Model")
+print("Model trained on the training data.")
+
+# Step 9: Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Step 10: Evaluate the model
+# Mean Squared Error (MSE) and R-squared (R²) to evaluate the performance
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+# Print evaluation results
+print("\nModel Evaluation:")
+print(f"Mean Squared Error (MSE): {mse}")
+print(f"R-squared (R²): {r2}")
+
+# Step 11: Visualize actual vs predicted values
+plt.figure(figsize=(10, 6))
+plt.scatter(y_test, y_pred, color='blue')
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color='red', linestyle='--')
+plt.title("Actual vs Predicted House Prices")
+plt.xlabel("Actual Prices")
+plt.ylabel("Predicted Prices")
+plt.show()
+
+
+
+General Questions on Linear Regression:
+What is Linear Regression, and how does it work?
+
+Answer: Linear regression is a supervised machine learning algorithm used for predicting continuous values. It finds the relationship between the dependent variable (target) and one or more independent variables (features) by fitting a linear equation to the observed data.
+
+What is the equation of a linear regression model?
+
+Answer: The equation for linear regression is:
+𝑦 = 𝛽0+𝛽1𝑥1+𝛽2𝑥2+⋯+𝛽𝑛𝑥𝑛+𝜖
+Where:
+y is the dependent variable (target).
+𝛽0 is the intercept.
+𝛽1,𝛽2,...,𝛽𝑛 are the coefficients for each independent variable.
+𝑥1,𝑥2,...,𝑥𝑛 are the independent variables (features).
+ϵ is the error term.
+What is the difference between simple and multiple linear regression?
+
+Answer: Simple linear regression involves one independent variable and one dependent variable, while multiple linear regression involves two or more independent variables to predict the dependent variable.
+
+What assumptions does Linear Regression make?
+
+Linearity: The relationship between the dependent and independent variables should be linear.
+
+Homoscedasticity: The variance of errors should be constant across all levels of the independent variable(s).
+
+Independence of errors: Observations should be independent of each other.
+
+No multicollinearity: The independent variables should not be highly correlated with each other.
+
+Normal distribution of errors.
+
+What is the cost function used in Linear Regression?
+
+Answer: The cost function in linear regression is the Mean Squared Error (MSE), which measures the average of the squared differences between the actual and predicted values.
+
+Questions Related to the Dataset:
+What is the Boston Housing Dataset, and what features does it contain?
+
+Answer: The Boston Housing Dataset is a collection of data about housing prices in Boston. It includes 506 instances, and each instance contains 14 features, such as crime rate, average number of rooms per dwelling, property tax rate, and more. The target variable is the median value of owner-occupied homes (medv).
+
+What is the role of the medv variable?
+
+Answer: The medv variable represents the median value of owner-occupied homes in $1000s, which is the target variable that we aim to predict.
+
+Why do we split the dataset into training and testing sets?
+
+Answer: We split the dataset to avoid overfitting. The training set is used to train the model, while the testing set is used to evaluate the model's performance on unseen data. This ensures that the model generalizes well.
+
+How do you handle missing values in the dataset?
+
+Answer: In this case, the Boston Housing dataset does not have any missing values. If missing values were present, we could handle them by imputing with the mean, median, or mode, or by removing rows with missing values.
+
+What is the significance of the correlation matrix in this analysis?
+
+Answer: The correlation matrix helps us understand the relationship between different features and the target variable. Highly correlated features with the target are more likely to be important predictors for the model.
+
+Questions About the Model:
+How do you evaluate the performance of a linear regression model?
+
+Answer: The performance of a linear regression model can be evaluated using metrics such as Mean Squared Error (MSE), which measures the average squared difference between the actual and predicted values, and R-squared (R²), which indicates how well the model explains the variance in the target variable.
+
+What is R-squared (R²), and how do you interpret it?
+
+Answer: R-squared is a statistical measure that represents the proportion of the variance in the dependent variable that is explained by the independent variables in the model. An R² value of 1 indicates perfect prediction, while a value closer to 0 indicates poor prediction.
+
+What is the purpose of using a train-test split?
+
+Answer: The train-test split is used to evaluate the model on unseen data to check how well it generalizes. It prevents overfitting and helps assess the model's ability to make accurate predictions on new data.
+
+What do you understand by overfitting and underfitting?
+
+Answer: Overfitting occurs when a model learns the noise or details in the training data to the extent that it negatively impacts its performance on new data. Underfitting occurs when the model is too simple to capture the underlying pattern in the data, resulting in poor performance on both training and testing data.
+
+Visualization and Interpretation:
+Why do you use a scatter plot of actual vs predicted values?
+
+Answer: A scatter plot of actual vs. predicted values helps visualize the model's accuracy. Ideally, the points should lie along the diagonal (red dashed line), meaning that the predicted values are close to the actual values. This indicates a good fit of the model.
+
+What does the residual plot show, and why is it important?
+
+Answer: The residual plot shows the difference between actual and predicted values (residuals). It helps in checking if the assumptions of linear regression (like homoscedasticity) are met. If the plot shows a random distribution of residuals, it suggests that the model is appropriate.
+
+Technical Implementation:
+What is the purpose of using train_test_split in scikit-learn?
+
+Answer: train_test_split is used to randomly split the dataset into training and testing sets, ensuring that the model is trained on one portion of the data and evaluated on another, helping assess its generalization performance.
+
+What would happen if you did not standardize or normalize the data before applying Linear Regression?
+
+Answer: Linear regression does not require data to be normalized or standardized, but doing so may help when the features have different units or scales. Standardization can help improve convergence and ensure that all features contribute equally to the model.
+
+Why do we use a linear regression model in this case instead of other machine learning algorithms?
+
+Answer: Linear regression is used because it is simple, interpretable, and efficient for predicting continuous values. In this case, predicting house prices is a regression problem, and linear regression can provide a clear relationship between the features and the target variable.
+
+How would you improve the model if its performance is not satisfactory?
+
+Answer: To improve the model, we could try:
+
+Adding more relevant features.
+
+Performing feature engineering to create new features.
+
+Using polynomial regression or other regression algorithms.
+
+Regularizing the model with techniques like Lasso or Ridge regression.
+
+Hyperparameter tuning using grid search or cross-validation.

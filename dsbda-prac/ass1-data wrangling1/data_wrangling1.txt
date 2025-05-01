@@ -1,0 +1,133 @@
+# Step 1: Import Required Python Libraries
+# pandas: Used for handling and analyzing data.
+# numpy: Useful for numerical operations.
+# seaborn & matplotlib: For visualizing data.
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Step 2: Locate Open Source Dataset,---Let’s use the Titanic Dataset
+df = pd.read_csv("titanic.csv")
+df.head(10)
+
+# Step 4: Data Preprocessing
+# 4.1 Check for missing values:
+df.isnull().sum()
+# 4.2 Descriptive statistics:
+df.describe(include='all')
+# 4.3 Shape of the DataFrame:
+df.shape
+# 4.4 Variable description:
+df.describe()
+ # Step 5: Data Formatting and Normalization
+# 5.1 Check data types:
+df.dtypes
+# 5.2 Convert data types (if needed):
+df['Survived'] = df['Survived'].astype('category')
+df['Pclass'] = df['Pclass'].astype('category')
+df['Sex'] = df['Sex'].astype('category')
+df['Embarked'] = df['Embarked'].astype('category')
+# 6. Turning Categorical Variables into Quantitative
+#6.1 View Categorical Columns
+df.select_dtypes(include='category').columns
+# 6.2 Apply One-Hot Encoding to the 'Sex', 'Embarked', and 'Pclass' columns
+# The drop_first=True argument ensures that we drop the first category of each column to avoid collinearity.
+# This is important in some models like Logistic Regression to avoid "dummy variable trap".
+df = pd.read_csv("titanic.csv")
+df = pd.get_dummies(df, columns=['Sex', 'Embarked', 'Pclass'], drop_first=True)
+
+#  Print the column names of the new dataframe to verify that the categorical columns have been encoded.
+print(df.columns)
+from sklearn.preprocessing import LabelEncoder
+
+# Initialize LabelEncoder
+le = LabelEncoder()
+
+# Apply label encoding to the 'Sex_male' column
+df['Sex_encoded'] = le.fit_transform(df['Sex_male'])  # 1 for 'male', 0 for 'female'
+
+# Show the first few rows to verify the new 'Sex_encoded' column
+print(df.head())
+
+
+
+
+### Viva Questions & Answers
+
+**Q1: What is the purpose of importing pandas and numpy in this code?**  
+**Answer:**  
+Pandas is used for data manipulation and analysis, providing data structures like DataFrame for structured data. Numpy is used for numerical operations, especially for handling arrays and matrices during data transformations.
+
+---
+
+**Q2: What is the purpose of the df.head(10) function?**  
+**Answer:**  
+`df.head(10)` displays the first 10 rows of the dataset. It helps to get an initial overview of the dataset, check its structure, and ensure the data is loaded correctly.
+
+---
+
+**Q3: How can you check for missing values in a dataframe?**  
+**Answer:**  
+You can use `df.isnull().sum()` to check for missing values. This will show the number of missing (NaN) values in each column of the DataFrame.
+
+---
+
+**Q4: What does the df.describe(include='all') function do?**  
+**Answer:**  
+`df.describe(include='all')` provides summary statistics for the dataset, including both numerical and categorical columns (count, mean, unique values, etc.), giving insights into the distribution of data.
+
+---
+
+**Q5: What is the significance of using .astype('category') on certain columns?**  
+**Answer:**  
+`.astype('category')` is used to convert columns with categorical data into the 'category' datatype, optimizing memory usage and performance when handling categorical data with limited unique values.
+
+---
+
+**Q6: What is One-Hot Encoding, and why is it used in this code?**  
+**Answer:**  
+One-Hot Encoding converts categorical variables into binary columns. Each unique category becomes a column, marked as 1 if the category is present, otherwise 0. It avoids multicollinearity in models like logistic regression by setting `drop_first=True`.
+
+---
+
+**Q7: Why do we use drop_first=True in the pd.get_dummies() function?**  
+**Answer:**  
+`drop_first=True` prevents the "dummy variable trap" by dropping the first category in each column. This avoids multicollinearity, which can cause issues in certain models like linear regression.
+
+---
+
+**Q8: What is the purpose of LabelEncoder in this code?**  
+**Answer:**  
+LabelEncoder is used to convert categorical labels, like 'male' and 'female', into numerical values (0 and 1). This makes categorical data compatible with machine learning algorithms.
+
+---
+
+**Q9: What would happen if you did not use drop_first=True in One-Hot Encoding?**  
+**Answer:**  
+Without `drop_first=True`, an extra column would be created for each categorical variable, leading to redundancy and potentially multicollinearity, which can cause problems in some machine learning models.
+
+---
+
+**Q10: What is the difference between One-Hot Encoding and Label Encoding?**  
+**Answer:**  
+- **One-Hot Encoding** creates separate binary columns for each category of a categorical variable (e.g., 'male' and 'female' become two columns).
+- **Label Encoding** converts each category into a unique integer (e.g., 'male' = 1, 'female' = 0).
+
+One-Hot Encoding is used for nominal variables, while Label Encoding is used for ordinal variables.
+
+---
+
+**Q11: After applying One-Hot Encoding, what changes do you expect in the dataset?**  
+**Answer:**  
+The categorical columns (Sex, Embarked, Pclass) will be replaced by binary columns. For example, 'Sex' will be replaced by `Sex_male`, 'Embarked' by `Embarked_Q` and `Embarked_S`, and 'Pclass' by `Pclass_2` and `Pclass_3`.
+
+**Q12: How does the LabelEncoder handle the 'Sex_male' column in this code?**  
+**Answer:**  
+LabelEncoder converts the 'Sex_male' column, which has binary values (0 and 1), into numerical values. It transforms 'male' into 1 and 'female' into 0, which is easier for machine learning models to process.
+
+**Q13: How do you know if the 'Sex' column has been successfully encoded after One-Hot Encoding?**  
+**Answer:**  
+By checking `df.columns` after encoding, you will see that the 'Sex' column has been replaced with a new binary column, `Sex_male`. The original 'Sex' column will no longer be present.
+

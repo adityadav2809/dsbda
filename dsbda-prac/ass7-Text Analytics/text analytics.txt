@@ -1,0 +1,98 @@
+# Import required libraries
+import nltk
+import string
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords, wordnet
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+from sklearn.feature_extraction.text import TfidfVectorizer
+# Download required NLTK data (run only once)
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('wordnet')
+
+# Function to map NLTK POS tags to WordNet POS tags
+def get_wordnet_pos(treebank_tag):
+    if treebank_tag.startswith('J'):
+        return wordnet.ADJ
+    elif treebank_tag.startswith('V'):
+        return wordnet.VERB
+    elif treebank_tag.startswith('N'):
+        return wordnet.NOUN
+    elif treebank_tag.startswith('R'):
+        return wordnet.ADV
+    else:
+        return wordnet.NOUN  # Default
+# Step 1: Load document
+with open("ADITYA.TXT", "r") as file:
+    document = file.read()
+# Step 2: Tokenization
+import re
+tokens = re.findall(r'\b\w+\b', document.lower())
+print("\nTokens:", tokens)
+# Step 3: POS Tagging
+pos_tags = pos_tag(tokens)
+print("\nPOS Tags:", pos_tags[:10])  # Display only first 10 for brevity
+# Step 4: Remove punctuation and stopwords
+# Define English stopwords
+stop_words = set(stopwords.words('english'))
+
+# Filter tokens: Keep only alphabetic words and remove stopwords
+tokens = [word.lower() for word in tokens if word.isalpha() and word.lower() not in stop_words]
+
+# Print the cleaned tokens (after removing punctuation and stopwords)
+print("\nCleaned Tokens (after removing punctuation and stopwords):")
+print(tokens[:20])  # print the first 20 tokens for preview
+# Step 5: Stemming
+stemmer = PorterStemmer()
+stemmed = [stemmer.stem(word) for word in tokens]
+print("\nStemmed:", stemmed[:10])
+# Step 6: Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized = [lemmatizer.lemmatize(word, get_wordnet_pos(tag)) for word, tag in pos_tag(tokens)]
+print("\nLemmatized:", lemmatized[:10])
+# Step 7: TF-IDF Calculation
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform([" ".join(lemmatized)])
+feature_names = vectorizer.get_feature_names_out()
+print("\nTF-IDF Scores:")
+for word, score in zip(feature_names, tfidf_matrix.toarray()[0]):
+    print(f"{word}: {score:.4f}")
+
+
+Explanation of the Code:
+Step 1: Tokenization
+Tokenization splits the text into individual words or tokens.
+
+word_tokenize(document) does this for you. It returns a list of words.
+
+Step 2: POS Tagging
+Part-of-Speech (POS) tagging assigns a grammatical tag to each word (e.g., noun, verb, adjective).
+
+pos_tag(tokens) returns a list of tuples where each tuple contains a word and its corresponding POS tag.
+
+Step 3: Removing Punctuation and Stopwords
+Stopwords are common words like "the", "is", "in" that don't carry much meaning for text analysis.
+
+stopwords.words('english') returns a list of stopwords in English.
+
+We use a list comprehension to remove non-alphabetic tokens and stopwords, converting everything to lowercase for consistency.
+
+Step 4: Stemming
+Stemming reduces words to their root forms (e.g., "running" becomes "run").
+
+We use the PorterStemmer() from NLTK to stem each token in the list.
+
+Step 5: Lemmatization
+Lemmatization is a more advanced process of reducing words to their base form (e.g., "better" becomes "good").
+
+WordNetLemmatizer() from NLTK performs this operation.
+
+Step 6: Term Frequency-Inverse Document Frequency (TF-IDF)
+TF-IDF is used to measure the importance of words in the document.
+
+We use TfidfVectorizer() from scikit-learn to calculate the TF-IDF values for each word in the document.
+
+It gives us a matrix of values where each value represents the importance of a word.

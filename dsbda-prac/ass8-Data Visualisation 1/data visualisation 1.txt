@@ -1,0 +1,86 @@
+# Importing the required libraries
+import seaborn as sns  # For data visualization
+import matplotlib.pyplot as plt  # For customizing and displaying the plots
+
+# Load the Titanic dataset from seaborn's inbuilt datasets
+# This dataset contains information about Titanic passengers and their survival status.
+titanic = sns.load_dataset('titanic')
+
+# Task 1: Exploring the data with a pairplot to see relationships between features
+# A pairplot is a grid of scatter plots showing relationships between different variables
+# We will also use the 'survived' column as the hue to color the data points based on whether the passenger survived or not.
+sns.pairplot(titanic.dropna(), hue='survived', diag_kind='kde')
+# 'dropna()' is used to exclude any rows with missing values for the pairplot
+# 'hue="survived"' colors the points based on survival status (1 for survived, 0 for not survived)
+# 'diag_kind="kde"' specifies that the diagonal should have KDE (Kernel Density Estimation) plots for each feature distribution
+plt.suptitle('Pairplot of Titanic Dataset', y=1.02)  # Adding a title for the entire pairplot
+plt.show()  # Display the pairplot
+
+# Task 2: Plotting the distribution of 'fare' (ticket price) using a histogram
+# We will visualize how ticket prices (fare) are distributed across all passengers
+plt.figure(figsize=(10, 6))  # Set the size of the plot
+sns.histplot(titanic['fare'], bins=30, kde=True, color='blue')  # Plot histogram of 'fare' with 30 bins and KDE curve
+# 'fare' is the ticket price paid by the passengers
+# 'bins=30' defines the number of bins for the histogram
+# 'kde=True' adds a KDE curve to show a smoothed version of the histogram distribution
+# 'color="blue"' sets the color of the histogram bars
+
+# Adding a title and labels to the plot for clarity
+plt.title('Distribution of Ticket Fare on Titanic')  # Title of the histogram
+plt.xlabel('Fare')  # Label for the x-axis (Ticket Price)
+plt.ylabel('Frequency')  # Label for the y-axis (Frequency of passengers in each fare range)
+
+plt.show()  # Display the histogram plot
+
+
+Certainly! Below is the Python code with added explanatory comments to make it clear what each section is doing:
+
+```python
+# Importing the required libraries
+import seaborn as sns  # For data visualization
+import matplotlib.pyplot as plt  # For customizing and displaying the plots
+
+# Load the Titanic dataset from seaborn's inbuilt datasets
+# This dataset contains information about Titanic passengers and their survival status.
+titanic = sns.load_dataset('titanic')
+
+# Task 1: Exploring the data with a pairplot to see relationships between features
+# A pairplot is a grid of scatter plots showing relationships between different variables
+# We will also use the 'survived' column as the hue to color the data points based on whether the passenger survived or not.
+sns.pairplot(titanic.dropna(), hue='survived', diag_kind='kde')
+# 'dropna()' is used to exclude any rows with missing values for the pairplot
+# 'hue="survived"' colors the points based on survival status (1 for survived, 0 for not survived)
+# 'diag_kind="kde"' specifies that the diagonal should have KDE (Kernel Density Estimation) plots for each feature distribution
+plt.suptitle('Pairplot of Titanic Dataset', y=1.02)  # Adding a title for the entire pairplot
+plt.show()  # Display the pairplot
+
+# Task 2: Plotting the distribution of 'fare' (ticket price) using a histogram
+# We will visualize how ticket prices (fare) are distributed across all passengers
+plt.figure(figsize=(10, 6))  # Set the size of the plot
+sns.histplot(titanic['fare'], bins=30, kde=True, color='blue')  # Plot histogram of 'fare' with 30 bins and KDE curve
+# 'fare' is the ticket price paid by the passengers
+# 'bins=30' defines the number of bins for the histogram
+# 'kde=True' adds a KDE curve to show a smoothed version of the histogram distribution
+# 'color="blue"' sets the color of the histogram bars
+
+# Adding a title and labels to the plot for clarity
+plt.title('Distribution of Ticket Fare on Titanic')  # Title of the histogram
+plt.xlabel('Fare')  # Label for the x-axis (Ticket Price)
+plt.ylabel('Frequency')  # Label for the y-axis (Frequency of passengers in each fare range)
+
+plt.show()  # Display the histogram plot
+```
+
+### Explanations:
+1. **Pairplot**:
+   - A **pairplot** helps you quickly understand the relationships between multiple numerical variables. In this case, we're looking at how various features (such as `age`, `fare`, `class`, etc.) relate to each other and to survival (`survived`).
+   - The `hue='survived'` argument colors the points based on whether the passenger survived or not, making it easy to spot any trends related to survival.
+   - The diagonal contains KDE (Kernel Density Estimate) plots of each individual variable, showing the distribution of that feature.
+
+2. **Histogram**:
+   - **`sns.histplot()`** is used to create a histogram of the ticket prices (fare). It shows how the fares are distributed across passengers.
+   - The `kde=True` argument adds a Kernel Density Estimate curve, which is a smoothed version of the histogram that helps you better visualize the underlying distribution.
+
+3. **Customizing the Plot**:
+   - `plt.figure(figsize=(10, 6))`: This sets the figure size for the plot to make it larger and easier to read.
+   - `plt.title()`, `plt.xlabel()`, and `plt.ylabel()` are used to add a title and labels to the axes for a more readable plot.

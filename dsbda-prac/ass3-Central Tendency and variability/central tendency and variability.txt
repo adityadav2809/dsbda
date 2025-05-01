@@ -1,0 +1,128 @@
+import pandas as pd
+
+# Load Titanic dataset (replace with the actual path of your dataset)
+titanic_df = pd.read_csv('titanic.csv')
+
+# Display the first few rows of the dataset to understand its structure
+print(titanic_df.head())
+
+# Group by 'Pclass' (Passenger Class) and calculate summary statistics for 'Age' and 'Fare'
+summary_stats = titanic_df.groupby('Pclass')[['Age', 'Fare']].describe()
+
+# Display the summary statistics
+print(summary_stats)
+
+import pandas as pd
+import numpy as np
+
+# Load the dataset (replace with the actual path to your dataset)
+df = pd.read_csv('iris.csv')
+
+# Display the first few rows of the dataset to verify its structure
+print(df.head())
+
+# Group by 'variety' (species) and calculate basic statistics for the sepal and petal measurements
+species_stats = df.groupby('variety').agg(
+    mean_sepal_length=('sepal.length', 'mean'),
+    std_dev_sepal_length=('sepal.length', 'std'),
+    min_sepal_length=('sepal.length', 'min'),
+    max_sepal_length=('sepal.length', 'max'),
+    percentile_25_sepal_length=('sepal.length', lambda x: np.percentile(x, 25)),
+    percentile_50_sepal_length=('sepal.length', lambda x: np.percentile(x, 50)),
+    percentile_75_sepal_length=('sepal.length', lambda x: np.percentile(x, 75)),
+    
+    mean_sepal_width=('sepal.width', 'mean'),
+    std_dev_sepal_width=('sepal.width', 'std'),
+    min_sepal_width=('sepal.width', 'min'),
+    max_sepal_width=('sepal.width', 'max'),
+    percentile_25_sepal_width=('sepal.width', lambda x: np.percentile(x, 25)),
+    percentile_50_sepal_width=('sepal.width', lambda x: np.percentile(x, 50)),
+    percentile_75_sepal_width=('sepal.width', lambda x: np.percentile(x, 75)),
+    
+    mean_petal_length=('petal.length', 'mean'),
+    std_dev_petal_length=('petal.length', 'std'),
+    min_petal_length=('petal.length', 'min'),
+    max_petal_length=('petal.length', 'max'),
+    percentile_25_petal_length=('petal.length', lambda x: np.percentile(x, 25)),
+    percentile_50_petal_length=('petal.length', lambda x: np.percentile(x, 50)),
+    percentile_75_petal_length=('petal.length', lambda x: np.percentile(x, 75)),
+    
+    mean_petal_width=('petal.width', 'mean'),
+    std_dev_petal_width=('petal.width', 'std'),
+    min_petal_width=('petal.width', 'min'),
+    max_petal_width=('petal.width', 'max'),
+    percentile_25_petal_width=('petal.width', lambda x: np.percentile(x, 25)),
+    percentile_50_petal_width=('petal.width', lambda x: np.percentile(x, 50)),
+    percentile_75_petal_width=('petal.width', lambda x: np.percentile(x, 75))
+)
+
+# Display the statistical details for each variety
+print(species_stats)
+
+
+
+Here are some possible **Viva Questions** related to the tasks of **Descriptive Statistics**, **Measures of Central Tendency**, **Variability**, and **Group-wise Analysis** that you performed using the Titanic and Iris datasets. These questions cover the concepts, methods, and interpretations related to the code and the analysis.
+
+### **Viva Questions for Task 1: Titanic Dataset**
+
+1. **What is descriptive statistics, and why is it important in data analysis?**
+   - *Descriptive statistics refers to the methods for summarizing and visualizing data. It provides a way to describe the basic features of a dataset, including central tendency (mean, median), variability (standard deviation), and overall distribution (min, max). It helps in understanding the data and making decisions based on it.*
+
+2. **Explain the difference between the mean, median, and mode.**
+   - *The mean is the average of all values, the median is the middle value when the data is sorted in ascending order, and the mode is the most frequent value in the dataset.*
+
+3. **What does the standard deviation tell us about the dataset?**
+   - *Standard deviation measures the spread or dispersion of the data. A higher standard deviation indicates that the values are more spread out from the mean, whereas a lower standard deviation indicates that the values are clustered around the mean.*
+
+4. **How is the `describe()` function in pandas helpful when working with numerical data?**
+   - *The `describe()` function in pandas provides a quick summary of the central tendency, spread, and shape of the dataset’s distribution, including mean, standard deviation, min, max, and percentiles (25%, 50%, 75%). It is useful for getting an overview of a dataset.*
+
+5. **What is the purpose of grouping data by a categorical variable (like `Pclass`) in this analysis?**
+   - *Grouping by a categorical variable allows us to analyze how different groups or categories within the data behave in relation to numeric variables. For example, analyzing how age and fare vary by passenger class (`Pclass`) in the Titanic dataset helps us understand the different characteristics of passengers from different classes.*
+
+6. **In the Titanic dataset, what conclusions can you draw from the summary statistics of `Age` and `Fare` for different `Pclass`?**
+   - *By comparing the summary statistics for `Age` and `Fare` for different `Pclass` categories, we can conclude how first-class, second-class, and third-class passengers differ in terms of age and fare. For instance, the mean fare for first-class passengers is much higher than for second or third class, which reflects the ticket price disparity among these groups.*
+
+7. **Why is the median value important when interpreting summary statistics, especially for skewed data?**
+   - *The median is a better measure of central tendency than the mean in cases of skewed data because it is not affected by outliers or extreme values. For instance, in the Titanic dataset, if there are some passengers with exceptionally high fares, the median fare would give a more accurate representation of the central tendency.*
+
+---
+
+### **Viva Questions for Task 2: Iris Dataset**
+
+1. **What is the purpose of calculating descriptive statistics for each species in the Iris dataset?**
+   - *The purpose of calculating descriptive statistics for each species is to understand the distribution and variability of sepal and petal measurements within each species. By comparing these statistics, we can better understand how the species differ in terms of size and shape.*
+
+2. **What is the significance of using percentiles (25%, 50%, 75%) in the analysis?**
+   - *Percentiles help us understand the distribution of data. The 25th percentile (Q1) represents the value below which 25% of the data falls, the 50th percentile (Q2) is the median, and the 75th percentile (Q3) represents the value below which 75% of the data falls. These give us insights into the spread and concentration of the data.*
+
+3. **How does grouping data by a categorical variable (e.g., `variety`) help in understanding the Iris dataset?**
+   - *Grouping by the `variety` (species) helps us compare the measurements (sepal length, sepal width, petal length, petal width) across different species. By doing so, we can identify patterns or distinct characteristics specific to each species, such as the average size of petals or sepals for each variety.*
+
+4. **Can you explain the difference between the standard deviation and the range in the context of the Iris dataset?**
+   - *The standard deviation tells us how much the data values deviate from the mean. A higher standard deviation means the data is more spread out. The range, on the other hand, only considers the difference between the maximum and minimum values in the dataset, so it is more sensitive to outliers.*
+
+5. **What do you understand by the interquartile range (IQR) in the Iris dataset?**
+   - *The interquartile range (IQR) is the difference between the 75th percentile (Q3) and the 25th percentile (Q1). It represents the spread of the middle 50% of the data. In the Iris dataset, calculating IQR for sepal and petal measurements can help identify the central spread and any potential outliers.*
+
+6. **Why is it important to calculate both mean and median for a dataset?**
+   - *While the mean gives the average of the data, the median provides the middle value. The mean can be heavily influenced by extreme values (outliers), while the median is a better measure of central tendency when the data is skewed or has outliers.*
+
+7. **What insights can we derive from comparing the mean petal length of `Iris-setosa`, `Iris-versicolor`, and `Iris-virginica`?**
+   - *By comparing the mean petal length of the three species, we can identify which species tend to have longer or shorter petals on average. For example, `Iris-setosa` might have smaller petals on average compared to `Iris-versicolor` and `Iris-virginica`, which can help in distinguishing between the species based on their physical characteristics.*
+
+8. **How does standard deviation help in understanding the variability of flower measurements between species?**
+   - *The standard deviation helps us understand the variability or spread of measurements. A high standard deviation indicates that the measurements for a species are more spread out, whereas a low standard deviation means the measurements are closer to the mean. This is useful for identifying how consistent or varied the flower sizes are within each species.*
+
+9. **Explain the difference between `min`, `max`, and percentiles when describing data.**
+   - *`Min` is the smallest value in the dataset, and `max` is the largest value. Percentiles give more granular insights into the distribution. For example, the 50th percentile (median) divides the dataset into two equal halves, while the 25th and 75th percentiles provide insights into the spread of the middle 50% of the data.*
+
+
+1. **What are central tendency measures, and why are they important in statistics?**
+   - *Central tendency measures (mean, median, mode) summarize a dataset by identifying the central point of the data. These measures are important because they provide a simple summary of the data's distribution and serve as the foundation for other statistical analyses.*
+
+2. **Why is it essential to use a combination of descriptive statistics (mean, median, standard deviation) when analyzing data?**
+   - *Using a combination of descriptive statistics helps paint a complete picture of the data. While the mean gives an overall average, the median is robust against outliers, and the standard deviation provides insight into variability. Together, they allow us to understand not just the central tendency but also the spread and consistency of the data.*
+
+3. **What is the role of visualizations (e.g., box plots, histograms) when interpreting summary statistics?**
+   - *Visualizations help us quickly identify patterns, outliers, and distributions within the data. For example, a box plot can show the median, quartiles, and any outliers, while a histogram provides insights into the shape and spread of the distribution.*

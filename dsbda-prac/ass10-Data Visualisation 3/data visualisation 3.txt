@@ -1,0 +1,152 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the Iris dataset from Seaborn
+iris = sns.load_dataset('iris')
+
+# Display the first few rows of the dataset
+print(iris.head())
+
+# Check for missing values and data types
+print(iris.info())
+# Plot histograms for each numeric feature
+numeric_columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
+
+# Set the figure size
+plt.figure(figsize=(12, 10))
+
+# Create a histogram for each feature
+for i, col in enumerate(numeric_columns, 1):
+    plt.subplot(2, 2, i)
+    sns.histplot(iris[col], kde=True, bins=20)
+    plt.title(f'Histogram of {col}')
+
+# Show the plots
+plt.tight_layout()
+plt.show()
+# Plot boxplot for each numeric feature
+plt.figure(figsize=(12, 10))
+
+# Create a boxplot for each feature
+for i, col in enumerate(numeric_columns, 1):
+    plt.subplot(2, 2, i)
+    sns.boxplot(x=iris['species'], y=iris[col])
+    plt.title(f'Boxplot of {col}')
+
+# Show the plots
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+Let's break down the task and go through the necessary steps to analyze the Iris dataset, as requested.
+
+### Step 1: List Features and Their Types
+
+The **Iris dataset** consists of several features. Here are the main features and their data types:
+
+- **sepal_length (numeric)**: Length of the sepal in centimeters.
+- **sepal_width (numeric)**: Width of the sepal in centimeters.
+- **petal_length (numeric)**: Length of the petal in centimeters.
+- **petal_width (numeric)**: Width of the petal in centimeters.
+- **species (nominal)**: The species of the Iris flower (setosa, versicolor, or virginica).
+
+So, the **numeric** features are `sepal_length`, `sepal_width`, `petal_length`, and `petal_width`, while `species` is a **nominal** feature.
+
+### Step 2: Load and Scan the Dataset
+
+We will load the Iris dataset, scan it to understand its structure, and then proceed with the visualizations.
+
+Here is the Python code to load and display the dataset:
+
+```python
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the Iris dataset from Seaborn
+iris = sns.load_dataset('iris')
+
+# Display the first few rows of the dataset
+print(iris.head())
+
+# Check for missing values and data types
+print(iris.info())
+```
+
+### Step 3: Histogram for Each Feature
+
+Histograms are a great way to visualize the distribution of each feature. Below is the code to plot histograms for each numeric feature in the Iris dataset:
+
+```python
+# Plot histograms for each numeric feature
+numeric_columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
+
+# Set the figure size
+plt.figure(figsize=(12, 10))
+
+# Create a histogram for each feature
+for i, col in enumerate(numeric_columns, 1):
+    plt.subplot(2, 2, i)
+    sns.histplot(iris[col], kde=True, bins=20)
+    plt.title(f'Histogram of {col}')
+
+# Show the plots
+plt.tight_layout()
+plt.show()
+```
+
+### Step 4: Boxplot for Each Feature
+
+A boxplot helps visualize the spread of the data and identify any outliers. Here’s the code to create boxplots for each feature:
+
+```python
+# Plot boxplot for each numeric feature
+plt.figure(figsize=(12, 10))
+
+# Create a boxplot for each feature
+for i, col in enumerate(numeric_columns, 1):
+    plt.subplot(2, 2, i)
+    sns.boxplot(x=iris['species'], y=iris[col])
+    plt.title(f'Boxplot of {col}')
+
+# Show the plots
+plt.tight_layout()
+plt.show()
+```
+
+### Step 5: Compare Distributions and Identify Outliers
+
+Now that we have both histograms and boxplots, we can analyze the distributions and identify any outliers.
+
+#### Observations:
+1. **Histograms**:
+   - **Sepal Length** and **Petal Length**: The distribution for these features is likely to be unimodal and slightly skewed to the right (positively skewed), as they tend to have more values on the lower end.
+   - **Sepal Width** and **Petal Width**: These distributions might be less skewed and more centered around a certain range.
+   - The **species** feature, being categorical, does not appear in the histograms, but it’s used to differentiate the data in boxplots.
+
+2. **Boxplots**:
+   - **Outliers**: In the boxplots, we can visually identify any data points that fall outside the “whiskers,” which are considered outliers. Typically, you might see outliers in the `petal_length` and `petal_width` features, as they might have extreme values compared to the central mass of the data.
+   - **Spread**: For each feature (e.g., `sepal_length`, `sepal_width`, etc.), you can compare the interquartile range (the distance between the first and third quartiles) to understand the spread of the data within each species.
+   - **Species Comparison**: The boxplots also allow you to compare the distributions of each feature for the three species (Setosa, Versicolor, Virginica). For example, `petal_length` and `petal_width` tend to have larger values for `virginica` compared to `setosa`, while `setosa` has the smallest values in these features.
+
+### Summary of Inferences:
+
+1. **Feature Types**:
+   - The dataset contains **numeric** features (`sepal_length`, `sepal_width`, `petal_length`, `petal_width`) and a **nominal** feature (`species`).
+
+2. **Feature Distributions**:
+   - Histograms reveal the underlying distributions of each numeric feature. Features like `sepal_length` and `petal_length` tend to be right-skewed.
+   - The distributions of the features help us understand which ones have larger variances and which are more concentrated.
+
+3. **Boxplots and Outliers**:
+   - Boxplots visually show how each feature behaves across the three species and highlight any outliers. For example, some species (like `setosa`) might show more consistent values across features, while others (like `virginica`) show more variability.
+   - Outliers are visible as points outside the whiskers in the boxplots, indicating potential extreme values.
+
+### Final Conclusion:
+The Iris dataset is well-suited for understanding basic data visualization techniques and comparing feature distributions. By using histograms and boxplots, we can gain insights into the central tendency, spread, and potential outliers in the data. This exploration also allows us to differentiate the species based on various flower measurements.

@@ -1,0 +1,243 @@
+# 1. Scan all variables for missing values and inconsistencies:
+# First, let’s create a simple dataset with some potential issues like missing values and inconsistencies. 
+# Afterward, we’ll perform data wrangling operations.
+    
+import pandas as pd
+import numpy as np
+
+# Creating a sample dataset
+data = {
+    'Student_ID': [1, 2, 3, 4, 5],
+    'Math_Score': [90, np.nan, 80, 70, 85],
+    'Science_Score': [85, 78, np.nan, 92, 88],
+    'Age': [18, 19, 20, np.nan, 22],
+    'Gender': ['Male', 'Female', 'Male', 'Female', 'Other'],
+    'Attendance': [95, 80, 100, 95, np.nan]
+}
+
+df = pd.DataFrame(data)
+
+# Checking for missing values
+print("Missing values in each column:")
+print(df.isnull().sum())
+
+# Checking for inconsistencies in Gender column
+print("\nChecking for inconsistencies in 'Gender' column:")
+print(df['Gender'].value_counts())
+
+# We can see that there's a missing value in Age and Attendance, and there's also an "Other" category in Gender, which may be inconsistent.
+
+# 2. Handling Missing Values and Inconsistencies:
+
+# Missing numeric values: We can either fill them with a mean, median, or use forward/backward fill methods.
+# Missing categorical values: For categorical data like "Gender," we can handle missing values by replacing them
+# with the most frequent value or a placeholder.
+
+# Filling missing values for numeric columns with the mean of each column
+df['Math_Score'] = df['Math_Score'].fillna(df['Math_Score'].mean())
+df['Science_Score'] = df['Science_Score'].fillna(df['Science_Score'].mean())
+df['Age'] = df['Age'].fillna(df['Age'].mean())
+df['Attendance'] = df['Attendance'].fillna(df['Attendance'].mean())
+
+# For categorical variables like Gender, fill with the mode (most frequent value)
+df['Gender'] = df['Gender'].fillna(df['Gender'].mode()[0])
+
+# After handling missing values
+print("\nDataset after handling missing values:")
+print(df)
+
+# 2. Scan all numeric variables for outliers:
+
+# Now we check for outliers in numeric variables. 
+# A typical method for detecting outliers is using the Interquartile Range (IQR), or we could use Z-scores.
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Checking for outliers using IQR
+def detect_outliers(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    return lower_bound, upper_bound
+
+# Detecting outliers in "Math_Score"
+lower, upper = detect_outliers(df, 'Math_Score')
+print(f"Math_Score outlier bounds: {lower}, {upper}")
+print("\nOutliers in Math_Score:")
+outliers = df[(df['Math_Score'] < lower) | (df['Math_Score'] > upper)]
+print(outliers)
+
+# Visualization to confirm the outliers
+sns.boxplot(x=df['Math_Score'])
+plt.title("Boxplot of Math Scores")
+plt.show()
+
+# Handling outliers: One option is to cap values beyond the outlier bounds
+df['Math_Score'] = np.clip(df['Math_Score'], lower, upper)
+
+# Visualize after handling outliers
+sns.boxplot(x=df['Math_Score'])
+plt.title("Boxplot of Math Scores after Outlier Removal")
+plt.show()
+
+# 3. Apply data transformations:
+
+# We will perform a transformation on one variable to reduce skewness. Skewness can cause problems in some models,
+# so it is often useful to transform the data to approximate a normal distribution.
+
+# Let’s use the log transformation to transform the "Attendance" variable, which often has a skewed distribution.
+from scipy.stats import skew
+
+# Checking the skewness of "Attendance" before transformation
+print(f"Skewness of 'Attendance' before transformation: {skew(df['Attendance'])}")
+
+# Apply log transformation on Attendance
+df['Log_Attendance'] = np.log(df['Attendance'])
+
+# Checking skewness after transformation
+print(f"Skewness of 'Log_Attendance' after transformation: {skew(df['Log_Attendance'])}")
+
+# Visualizing the distribution before and after the log transformation
+plt.subplot(1, 2, 1)
+sns.histplot(df['Attendance'], kde=True)
+plt.title("Original Attendance Distribution")
+
+plt.subplot(1, 2, 2)
+sns.histplot(df['Log_Attendance'], kde=True)
+plt.title("Log Transformed Attendance Distribution")
+plt.tight_layout()
+plt.show()
+# Explanation of Transformation:
+# Log Transformation: This transformation is applied to reduce positive skewness. 
+# The log of data compresses large values and makes the distribution more symmetric and closer to a normal distribution.
+
+
+print("\nFinal cleaned dataset:")
+print(df)
+
+
+#other methods than iqr
+from scipy.stats import zscore
+
+# Assuming df is your DataFrame and 'Math_Score' is a numeric column
+z_scores = zscore(df['Math_Score'])
+df['z_score'] = z_scores
+
+# Identifying outliers with z-score greater than 3 or less than -3
+outliers = df[ (df['z_score'] > 3) | (df['z_score'] < -3) ]
+print(outliers)
+# . Z-Score Method
+# Description: The Z-score method involves calculating how many standard deviations a data point is from the mean of the dataset.
+# If a data point is far from the mean (i.e., has a high Z-score), it's considered an outlier.
+# Formula:𝑍=(𝑋−𝜇)/𝜎
+# Where:
+# X is the data point.
+# μ is the mean of the dataset.
+# σ is the standard deviation of the dataset.
+# Threshold: A Z-score above 3 or below -3 (i.e., a data point is more than 3 standard deviations away from the mean) is often 
+# considered an outlier.
+# Use Case: This method is useful when the data is normally distributed, as it works on the assumption of a bell curve
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Boxplot to visually identify outliers
+sns.boxplot(df['Math_Score'])
+plt.show()
+
+# Histogram to visualize the distribution of data
+sns.histplot(df['Math_Score'], kde=True)
+plt.show()
+# 3. Visual Methods (Boxplot, Histogram)
+# Description: One of the most intuitive methods for detecting outliers is through visualization.
+
+# Boxplots: Outliers are usually represented as points that fall outside the "whiskers" of the box plot (typically 1.5 * IQR).
+
+# Histograms: A long tail on one side (skewed data) could indicate outliers, or a small number of very large/small values may appear as outliers in a histogram.
+
+# Use Case: This is a quick and visual way to identify potential outliers, especially in small datasets or when you want a simple, non-quantitative check.
+
+### **1. Questions on Data Wrangling Process:**
+
+#### **a. What is data wrangling, and why is it important?**
+- **Answer Approach:** Data wrangling, or data cleaning, involves transforming raw data into a structured format suitable for analysis. It includes handling missing values, dealing with outliers, and transforming data types. It’s important because clean data ensures more reliable, accurate, and efficient analysis.
+
+#### **b. Can you explain how you handled missing values in the dataset?**
+- **Answer Approach:** Missing values were handled by filling numeric columns (e.g., Math_Score, Science_Score) with the **mean** and categorical columns (e.g., Gender) with the **mode**. This ensures that the dataset is complete without introducing bias.
+
+#### **c. Why did you choose to fill missing values with the mean/mode?**
+- **Answer Approach:** For numeric columns, the mean is often a good choice when missing values are random, as it minimizes distortion. For categorical variables, the mode is chosen because it represents the most frequent category, maintaining consistency in the dataset.
+
+#### **d. How did you detect outliers in the dataset?**
+- **Answer Approach:** Outliers were detected using the **Interquartile Range (IQR)** method. Outliers are values that lie beyond 1.5 times the IQR from the first and third quartiles. These are considered extreme values that could skew analysis.
+
+#### **e. What method did you use to handle outliers and why?**
+- **Answer Approach:** Outliers were capped using the `np.clip()` function to ensure that extreme values fall within the upper and lower bounds determined by the IQR. This way, the data remains within a reasonable range, and the analysis is not distorted by extreme values.
+
+#### **f. What is the IQR method for detecting outliers, and why did you use it?**
+- **Answer Approach:** The IQR method calculates the spread of the middle 50% of the data (between the 25th and 75th percentiles). Values outside the range of 1.5 * IQR below Q1 or above Q3 are considered outliers. This method is widely used because it is robust to non-normal distributions.
+
+### **2. Questions on Data Transformation:**
+
+#### **a. What transformation did you apply to the data and why?**
+- **Answer Approach:** I applied a **log transformation** to the `Attendance` column to reduce **skewness**. The transformation compresses large values, making the distribution closer to normal, which is important for many statistical analyses and machine learning models.
+
+#### **b. Why do we apply data transformations?**
+- **Answer Approach:** Data transformations are applied to improve the quality of the data. For example, applying a log transformation to a skewed distribution helps normalize it, making it more suitable for analysis and predictive modeling. It can also help linearize non-linear relationships between variables.
+
+#### **c. How do you check if a transformation was successful?**
+- **Answer Approach:** After applying a transformation, we check the **skewness** of the data and visualize the distribution using histograms or boxplots. A successful transformation should result in a distribution that is closer to normal, with reduced skewness.
+
+### **3. Questions on Techniques and Rationale:**
+
+#### **a. Why didn’t you remove the outliers instead of capping them?**
+- **Answer Approach:** Removing outliers could lead to a loss of valuable information, especially if they represent rare but important data points. By capping the outliers, we retain all the data points while ensuring that extreme values do not unduly influence the analysis.
+
+#### **b. What could be some disadvantages of filling missing values with the mean or mode?**
+- **Answer Approach:** Filling missing values with the mean could reduce the variability of the data, especially if a significant portion of the data is missing. For categorical data, using the mode might not always represent the true distribution if the missing values are not randomly distributed.
+
+#### **c. Can you think of any alternative methods for dealing with missing values, apart from using mean or mode?**
+- **Answer Approach:** Yes, alternatives include:
+  - **Forward/Backward fill**: Useful for time-series data.
+  - **Interpolation**: Estimating missing values based on other observations.
+  - **Predictive Imputation**: Using machine learning models to predict missing values.
+
+#### **d. What would happen if you didn’t handle the outliers?**
+- **Answer Approach:** If outliers are not handled, they could skew the results of statistical tests or models, making the data unrepresentative of the general population. For example, they could affect the mean, standard deviation, or regression coefficients, leading to inaccurate conclusions.
+
+
+### **4. Questions on Dataset and Practical Applications:**
+
+#### **a. Can you describe the significance of the `Log_Attendance` column in your analysis?**
+- **Answer Approach:** The `Log_Attendance` column was created to reduce skewness in the `Attendance` data. By applying the log transformation, the distribution of attendance becomes more normal, making it better suited for statistical analysis or predictive modeling, where normality is often assumed.
+
+#### **b. How would you proceed if the dataset had more complex issues like duplicates or inconsistent formats?**
+- **Answer Approach:** If duplicates were present, I would remove them using `df.drop_duplicates()`. If there were inconsistent formats (e.g., date columns in different formats), I would standardize them using `pd.to_datetime()` for dates or appropriate functions for other data types.
+
+#### **c. What would you do if you had a very large dataset with missing values?**
+- **Answer Approach:** For large datasets, instead of filling missing values with the mean or mode, I might explore more advanced techniques like **KNN Imputation** (using nearest neighbors to fill missing values) or **Multiple Imputation** methods. Additionally, I could consider machine learning models that handle missing data inherently, such as Random Forests.
+
+#### **d. Could this dataset be used for predictive modeling, and if so, what type of model would you consider?**
+- **Answer Approach:** Yes, once the dataset is cleaned, it can be used for predictive modeling. For example, a regression model could predict student performance based on features like age, attendance, and gender. For classification tasks, a decision tree or random forest could predict whether a student is likely to pass or fail based on their features.
+
+### **5. Questions on Final Results and Outcome:**
+
+#### **a. What are the key findings or insights after performing data wrangling on this dataset?**
+- **Answer Approach:** After cleaning the dataset, we have a more reliable and consistent set of data. The missing values were handled, outliers were capped, and the distribution of attendance was normalized. The cleaned dataset is now ready for further analysis or modeling.
+
+#### **b. How would you visualize the cleaned data to understand it better?**
+- **Answer Approach:** After cleaning the data, I would use **pair plots**, **correlation heatmaps**, and **boxplots** to understand relationships between features, check for any remaining outliers, and assess the distribution of numerical variables.
+
+#### **c. Can you describe a scenario where this cleaned dataset could be applied in a real-world setting?**
+- **Answer Approach:** This cleaned dataset could be used in educational analytics to predict student performance, identify at-risk students based on attendance, scores, and age, or help devise personalized interventions to improve student success.
+
+### **6. Questions on Tools and Libraries Used:**
+
+#### **a. Why did you use the `pandas` library for data wrangling?**
+- **Answer Approach:** `pandas` is a powerful library that provides efficient data structures (like DataFrame) and tools for data manipulation. It allows easy handling of missing values, merging datasets, and applying transformations, which makes it ideal for data wrangling.
+
+#### **b. Can you explain the role of `seaborn` and `matplotlib` in your data wrangling process?**
+- **Answer Approach:** **`seaborn`** and **`matplotlib`** were used for visualization. They help in understanding the distribution of the data, identifying patterns, and visualizing outliers or transformations through boxplots, histograms, and scatter plots.
